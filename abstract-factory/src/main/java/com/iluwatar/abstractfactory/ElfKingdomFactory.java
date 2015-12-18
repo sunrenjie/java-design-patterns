@@ -15,6 +15,10 @@ public class ElfKingdomFactory implements KingdomFactory {
     return new ElfKing();
   }
 
+  public Queen createQueen() {
+    return new ElfQueen();
+  }
+
   public Army createArmy() {
     return new ElfArmy();
   }

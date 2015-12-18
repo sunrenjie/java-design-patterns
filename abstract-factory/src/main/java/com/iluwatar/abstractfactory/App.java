@@ -18,6 +18,7 @@ package com.iluwatar.abstractfactory;
 public class App {
 
   private King king;
+  private Queen queen;
   private Castle castle;
   private Army army;
 
@@ -26,6 +27,7 @@ public class App {
    */
   public void createKingdom(final KingdomFactory factory) {
     setKing(factory.createKing());
+    setQueen(factory.createQueen());
     setCastle(factory.createCastle());
     setArmy(factory.createArmy());
   }
@@ -49,7 +51,19 @@ public class App {
   private void setKing(final King king) {
     this.king = king;
   }
-  
+
+  Queen getQueen(final KingdomFactory factory) {
+    return factory.createQueen();
+  }
+
+  public Queen getQueen() {
+    return queen;
+  }
+
+  private void setQueen(final Queen queen) {
+    this.queen = queen;
+  }
+
   Castle getCastle(final KingdomFactory factory) {
     return factory.createCastle();
   }
@@ -91,6 +105,7 @@ public class App {
     System.out.println(app.getArmy().getDescription());
     System.out.println(app.getCastle().getDescription());
     System.out.println(app.getKing().getDescription());
+    System.out.println(app.getQueen().getDescription());
 
     System.out.println("\nOrc Kingdom");
     KingdomFactory orcKingdomFactory;
@@ -99,6 +114,7 @@ public class App {
     System.out.println(app.getArmy().getDescription());
     System.out.println(app.getCastle().getDescription());
     System.out.println(app.getKing().getDescription());
+    System.out.println(app.getQueen().getDescription());
 
   }
 

@@ -29,6 +29,16 @@ public class AppTest {
   }
 
   @Test
+  public void queen() {
+    final Queen elfQueen = app.getQueen(elfFactory);
+    assertTrue(elfQueen instanceof ElfQueen);
+    assertEquals(elfQueen.getDescription(), ElfQueen.DESCRIPTION);
+    final Queen orcQueen = app.getQueen(orcFactory);
+    assertTrue(orcQueen instanceof OrcQueen);
+    assertEquals(orcQueen.getDescription(), OrcQueen.DESCRIPTION);
+  }
+
+  @Test
   public void castle() {
     final Castle elfCastle = app.getCastle(elfFactory);
     assertTrue(elfCastle instanceof ElfCastle);
@@ -52,10 +62,13 @@ public class AppTest {
   public void createElfKingdom() {
     app.createKingdom(elfFactory);
     final King king = app.getKing();
+    final Queen queen = app.getQueen();
     final Castle castle = app.getCastle();
     final Army army = app.getArmy();
     assertTrue(king instanceof ElfKing);
     assertEquals(ElfKing.DESCRIPTION, king.getDescription());
+    assertTrue(queen instanceof ElfQueen);
+    assertEquals(ElfQueen.DESCRIPTION, queen.getDescription());
     assertTrue(castle instanceof ElfCastle);
     assertEquals(ElfCastle.DESCRIPTION, castle.getDescription());
     assertTrue(army instanceof ElfArmy);
@@ -66,10 +79,13 @@ public class AppTest {
   public void createOrcKingdom() {
     app.createKingdom(orcFactory);
     final King king = app.getKing();
+    final Queen queen = app.getQueen();
     final Castle castle = app.getCastle();
     final Army army = app.getArmy();
     assertTrue(king instanceof OrcKing);
     assertEquals(OrcKing.DESCRIPTION, king.getDescription());
+    assertTrue(queen instanceof OrcQueen);
+    assertEquals(OrcQueen.DESCRIPTION, queen.getDescription());
     assertTrue(castle instanceof OrcCastle);
     assertEquals(OrcCastle.DESCRIPTION, castle.getDescription());
     assertTrue(army instanceof OrcArmy);

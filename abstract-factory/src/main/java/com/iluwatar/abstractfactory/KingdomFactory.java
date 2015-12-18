@@ -11,6 +11,8 @@ public interface KingdomFactory {
 
   King createKing();
 
+  Queen createQueen();
+
   Army createArmy();
 
 }

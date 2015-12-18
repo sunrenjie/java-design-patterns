@@ -15,6 +15,10 @@ public class OrcKingdomFactory implements KingdomFactory {
     return new OrcKing();
   }
 
+  public Queen createQueen() {
+    return new OrcQueen();
+  }
+
   public Army createArmy() {
     return new OrcArmy();
   }
