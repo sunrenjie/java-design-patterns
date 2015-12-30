@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -16,6 +17,8 @@ import static org.mockito.Mockito.verify;
 public class AdapterPatternTest {
 
   private Map<String, Object> beans;
+
+  private static final String FISHING_BEAN = "fisher";
 
   private static final String BATTLESHIP_BEAN = "engineer";
 
@@ -28,7 +31,10 @@ public class AdapterPatternTest {
   public void setup() {
     beans = new HashMap<>();
 
-    BattleFishingBoat battleFishingBoat = spy(new BattleFishingBoat());
+    FishingBoat fishingBoat = spy(new FishingBoat());
+    beans.put(FISHING_BEAN, fishingBoat);
+
+    BattleFishingBoat battleFishingBoat = spy(new BattleFishingBoat(fishingBoat));
     beans.put(BATTLESHIP_BEAN, battleFishingBoat);
 
     Captain captain = new Captain();
@@ -51,11 +57,14 @@ public class AdapterPatternTest {
 
     // the captain internally calls the battleship object to move
     BattleShip battleship = (BattleShip) beans.get(BATTLESHIP_BEAN);
+    FishingBoat fishingBoat = (FishingBoat) beans.get(FISHING_BEAN);
     verify(battleship).move();
+    verify(fishingBoat).sail();
 
     // same with above with firing
     captain.fire();
     verify(battleship).fire();
+    verify(fishingBoat, times(0)).fire();
 
   }
 }

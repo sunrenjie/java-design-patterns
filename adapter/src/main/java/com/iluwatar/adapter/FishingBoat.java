@@ -15,4 +15,8 @@ public class FishingBoat {
     System.out.println("fishing ...");
   }
 
+  public void fire() {
+    System.out.println("Firing fireworks ...");
+  }
+
 }

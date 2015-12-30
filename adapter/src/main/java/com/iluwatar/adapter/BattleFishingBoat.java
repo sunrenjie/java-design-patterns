@@ -17,8 +17,13 @@ public class BattleFishingBoat implements BattleShip {
     boat = new FishingBoat();
   }
 
+  public BattleFishingBoat(FishingBoat boat) {
+    this.boat = boat;
+  }
+
   @Override
   public void fire() {
+    // FishingBoat's fire() considered inadequate for our use; hence creates our own version.
     System.out.println("fire!");
   }
 
