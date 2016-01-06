@@ -29,6 +29,9 @@ public class Cake {
   @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   private Set<CakeLayer> layers;
 
+  @OneToOne(cascade = CascadeType.REMOVE)
+  private CakeBottom bottom;
+
   public Cake() {
     setLayers(new HashSet<>());
   }
@@ -61,8 +64,16 @@ public class Cake {
     this.layers.add(layer);
   }
 
+  public CakeBottom getBottom() {
+    return bottom;
+  }
+
+  public void setBottom(CakeBottom bottom) {
+    this.bottom = bottom;
+  }
+
   @Override
   public String toString() {
-    return String.format("id=%s topping=%s layers=%s", id, topping, layers.toString());
+    return String.format("id=%s topping=%s layers=%s bottom=%s", id, topping, layers.toString(), bottom);
   }
 }

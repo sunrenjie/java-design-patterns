@@ -26,7 +26,8 @@ public class CakeViewImplTest extends StdOutTest {
     layers.add(new CakeLayerInfo("layer3", 3000));
 
     final List<CakeInfo> cakes = new ArrayList<>();
-    final CakeInfo cake = new CakeInfo(new CakeToppingInfo("topping", 1000), layers);
+    final CakeInfo cake = new CakeInfo(new CakeToppingInfo("topping", 1000), layers,
+        new CakeBottomInfo("bottom", 1000));
     cakes.add(cake);
 
     final CakeBakingService bakingService = mock(CakeBakingService.class);

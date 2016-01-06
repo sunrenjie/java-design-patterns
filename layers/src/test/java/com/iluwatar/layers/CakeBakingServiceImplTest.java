@@ -65,6 +65,28 @@ public class CakeBakingServiceImplTest {
   }
 
   @Test
+  public void testBottoms() throws CakeBakingException {
+    final CakeBakingServiceImpl service = new CakeBakingServiceImpl();
+
+    final List<CakeBottomInfo> initialBottoms = service.getAvailableBottoms();
+    assertNotNull(initialBottoms);
+    assertTrue(initialBottoms.isEmpty());
+
+    service.saveNewBottom(new CakeBottomInfo("Bottom1", 1000));
+    service.saveNewBottom(new CakeBottomInfo("Bottom2", 2000));
+
+    final List<CakeBottomInfo> availableBottoms = service.getAvailableBottoms();
+    assertNotNull(availableBottoms);
+    assertEquals(2, availableBottoms.size());
+    for (final CakeBottomInfo bottom : availableBottoms) {
+      assertNotNull(bottom.id);
+      assertNotNull(bottom.name);
+      assertNotNull(bottom.toString());
+      assertTrue(bottom.calories > 0);
+    }
+  }
+
+  @Test
   public void testBakeCakes() throws CakeBakingException {
     final CakeBakingServiceImpl service = new CakeBakingServiceImpl();
 
@@ -84,8 +106,13 @@ public class CakeBakingServiceImplTest {
     service.saveNewLayer(layer2);
     service.saveNewLayer(layer3);
 
-    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, layer2)));
-    service.bakeNewCake(new CakeInfo(topping2, Collections.singletonList(layer3)));
+    final CakeBottomInfo bottom1 = new CakeBottomInfo("Bottom1", 1000);
+    final CakeBottomInfo bottom2 = new CakeBottomInfo("Bottom2", 2000);
+    service.saveNewBottom(bottom1);
+    service.saveNewBottom(bottom2);
+
+    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, layer2), bottom1));
+    service.bakeNewCake(new CakeInfo(topping2, Collections.singletonList(layer3), bottom2));
 
     final List<CakeInfo> allCakes = service.getAllCakes();
     assertNotNull(allCakes);
@@ -96,6 +123,7 @@ public class CakeBakingServiceImplTest {
       assertNotNull(cakeInfo.cakeLayerInfos);
       assertNotNull(cakeInfo.toString());
       assertFalse(cakeInfo.cakeLayerInfos.isEmpty());
+      assertNotNull(cakeInfo.cakeBottomInfo);
       assertTrue(cakeInfo.calculateTotalCalories() > 0);
     }
 
@@ -110,8 +138,11 @@ public class CakeBakingServiceImplTest {
     service.saveNewLayer(layer1);
     service.saveNewLayer(layer2);
 
+    final CakeBottomInfo bottom1 = new CakeBottomInfo("Bottom1", 1000);
+    service.saveNewBottom(bottom1);
+
     final CakeToppingInfo missingTopping = new CakeToppingInfo("Topping1", 1000);
-    service.bakeNewCake(new CakeInfo(missingTopping, Arrays.asList(layer1, layer2)));
+    service.bakeNewCake(new CakeInfo(missingTopping, Arrays.asList(layer1, layer2), bottom1));
   }
 
   @Test(expected = CakeBakingException.class)
@@ -128,8 +159,35 @@ public class CakeBakingServiceImplTest {
     final CakeLayerInfo layer1 = new CakeLayerInfo("Layer1", 1000);
     service.saveNewLayer(layer1);
 
+    final CakeBottomInfo bottom1 = new CakeBottomInfo("Bottom1", 1000);
+    service.saveNewBottom(bottom1);
+
+
     final CakeLayerInfo missingLayer = new CakeLayerInfo("Layer2", 2000);
-    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, missingLayer)));
+    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, missingLayer), bottom1));
+
+  }
+
+  @Test(expected = CakeBakingException.class)
+  public void testBakeCakeMissingBottom() throws CakeBakingException {
+    final CakeBakingServiceImpl service = new CakeBakingServiceImpl();
+
+    final List<CakeInfo> initialCakes = service.getAllCakes();
+    assertNotNull(initialCakes);
+    assertTrue(initialCakes.isEmpty());
+
+    final CakeToppingInfo topping1 = new CakeToppingInfo("Topping1", 1000);
+    service.saveNewTopping(topping1);
+
+    final CakeLayerInfo layer1 = new CakeLayerInfo("Layer1", 1000);
+    service.saveNewLayer(layer1);
+
+    final CakeBottomInfo bottom1 = new CakeBottomInfo("Bottom1", 1000);
+    service.saveNewBottom(bottom1);
+
+
+    final CakeBottomInfo missingBottom = new CakeBottomInfo("Bottom2", 2000);
+    service.bakeNewCake(new CakeInfo(topping1, Collections.singletonList(layer1), missingBottom));
 
   }
 
@@ -151,8 +209,13 @@ public class CakeBakingServiceImplTest {
     service.saveNewLayer(layer1);
     service.saveNewLayer(layer2);
 
-    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, layer2)));
-    service.bakeNewCake(new CakeInfo(topping2, Collections.singletonList(layer2)));
+    final CakeBottomInfo bottom1 = new CakeBottomInfo("Bottom1", 1000);
+    final CakeBottomInfo bottom2 = new CakeBottomInfo("Bottom2", 2000);
+    service.saveNewBottom(bottom1);
+    service.saveNewBottom(bottom2);
+
+    service.bakeNewCake(new CakeInfo(topping1, Arrays.asList(layer1, layer2), bottom1));
+    service.bakeNewCake(new CakeInfo(topping2, Collections.singletonList(layer2), bottom2));
 
   }
 

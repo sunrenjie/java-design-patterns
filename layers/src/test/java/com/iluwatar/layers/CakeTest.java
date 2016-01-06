@@ -76,6 +76,16 @@ public class CakeTest {
   }
 
   @Test
+  public void testSetBottom() {
+    final Cake cake = new Cake();
+    assertNull(cake.getBottom());
+
+    final CakeBottom expected = new CakeBottom("Dummy", 1000);
+    cake.setBottom(expected);
+    assertEquals(expected, cake.getBottom());
+  }
+
+  @Test
   public void testToString() {
     final CakeTopping topping = new CakeTopping("topping", 20);
     topping.setId(2345L);
@@ -83,13 +93,18 @@ public class CakeTest {
     final CakeLayer layer = new CakeLayer("layer", 100);
     layer.setId(3456L);
 
+    final CakeBottom bottom = new CakeBottom("bottom", 1000);
+    bottom.setId(4567L);
+
     final Cake cake = new Cake();
     cake.setId(1234L);
     cake.setTopping(topping);
     cake.addLayer(layer);
+    cake.setBottom(bottom);
 
     final String expected = "id=1234 topping=id=2345 name=topping calories=20 " 
-            + "layers=[id=3456 name=layer calories=100]";
+            + "layers=[id=3456 name=layer calories=100] "
+            + "bottom=id=4567 name=bottom calories=1000";
     assertEquals(expected, cake.toString());
 
   }

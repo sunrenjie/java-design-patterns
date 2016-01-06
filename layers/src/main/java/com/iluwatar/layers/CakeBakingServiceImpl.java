@@ -49,12 +49,23 @@ public class CakeBakingServiceImpl implements CakeBakingService {
         foundLayers.add(found.get());
       }
     }
+    List<CakeBottom> allBottoms = getAvailableBottomEntities();
+    List<CakeBottom> matchingBottoms =
+        allBottoms.stream().filter((t) -> t.getName().equals(cakeInfo.cakeBottomInfo.name))
+            .collect(Collectors.toList());
+    if (matchingBottoms.isEmpty()) {
+      throw new CakeBakingException((String.format("Bottom %s is not available",
+          cakeInfo.cakeBottomInfo.name)));
+    }
+    CakeBottom bottom = matchingBottoms.get(0);
+
     CakeToppingDao toppingBean = context.getBean(CakeToppingDao.class);
-    CakeTopping topping = toppingBean.findOne(matchingToppings.iterator().next().getId());
+    CakeTopping topping = matchingToppings.get(0);
     CakeDao cakeBean = context.getBean(CakeDao.class);
     Cake cake = new Cake();
     cake.setTopping(topping);
     cake.setLayers(foundLayers);
+    cake.setBottom(bottom);
     cakeBean.save(cake);
     topping.setCake(cake);
     toppingBean.save(topping);
@@ -63,6 +74,8 @@ public class CakeBakingServiceImpl implements CakeBakingService {
       layer.setCake(cake);
       layerBean.save(layer);
     }
+    CakeBottomDao bottomBean = context.getBean(CakeBottomDao.class);
+    bottomBean.save(bottom);
   }
 
   @Override
@@ -75,6 +88,12 @@ public class CakeBakingServiceImpl implements CakeBakingService {
   public void saveNewLayer(CakeLayerInfo layerInfo) {
     CakeLayerDao bean = context.getBean(CakeLayerDao.class);
     bean.save(new CakeLayer(layerInfo.name, layerInfo.calories));
+  }
+
+  @Override
+  public void saveNewBottom(CakeBottomInfo bottomInfo) {
+    CakeBottomDao bean = context.getBean(CakeBottomDao.class);
+    bean.save(new CakeBottom(bottomInfo.name, bottomInfo.calories));
   }
 
   private List<CakeTopping> getAvailableToppingEntities() {
@@ -131,6 +150,33 @@ public class CakeBakingServiceImpl implements CakeBakingService {
     return result;
   }
 
+  private List<CakeBottom> getAvailableBottomEntities() {
+    CakeBottomDao bean = context.getBean(CakeBottomDao.class);
+    List<CakeBottom> result = new ArrayList<>();
+    Iterator<CakeBottom> iterator = bean.findAll().iterator();
+    while (iterator.hasNext()) {
+      CakeBottom next = iterator.next();
+      if (next.getCake() == null) {
+        result.add(next);
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public List<CakeBottomInfo> getAvailableBottoms() {
+    CakeBottomDao bean = context.getBean(CakeBottomDao.class);
+    List<CakeBottomInfo> result = new ArrayList<>();
+    Iterator<CakeBottom> iterator = bean.findAll().iterator();
+    while (iterator.hasNext()) {
+      CakeBottom next = iterator.next();
+      if (next.getCake() == null) {
+        result.add(new CakeBottomInfo(next.getId(), next.getName(), next.getCalories()));
+      }
+    }
+    return result;
+  }
+
   @Override
   public List<CakeInfo> getAllCakes() {
     CakeDao cakeBean = context.getBean(CakeDao.class);
@@ -145,7 +191,10 @@ public class CakeBakingServiceImpl implements CakeBakingService {
       for (CakeLayer layer : cake.getLayers()) {
         cakeLayerInfos.add(new CakeLayerInfo(layer.getId(), layer.getName(), layer.getCalories()));
       }
-      CakeInfo cakeInfo = new CakeInfo(cake.getId(), cakeToppingInfo, cakeLayerInfos);
+      CakeBottomInfo cakeBottomInfo =
+          new CakeBottomInfo(cake.getBottom().getId(), cake.getBottom().getName(),
+              cake.getBottom().getCalories());
+      CakeInfo cakeInfo = new CakeInfo(cake.getId(), cakeToppingInfo, cakeLayerInfos, cakeBottomInfo);
       result.add(cakeInfo);
     }
     return result;

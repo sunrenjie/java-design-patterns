@@ -65,6 +65,7 @@ public class App {
    * Initializes the example data
    */
   private static void initializeData(CakeBakingService cakeBakingService) {
+    // New Info objects saved here are 'available' as their Cake members are null.
     cakeBakingService.saveNewLayer(new CakeLayerInfo("chocolate", 1200));
     cakeBakingService.saveNewLayer(new CakeLayerInfo("banana", 900));
     cakeBakingService.saveNewLayer(new CakeLayerInfo("strawberry", 950));
@@ -75,9 +76,15 @@ public class App {
     cakeBakingService.saveNewTopping(new CakeToppingInfo("candies", 350));
     cakeBakingService.saveNewTopping(new CakeToppingInfo("cherry", 350));
 
+    cakeBakingService.saveNewBottom(new CakeBottomInfo("bread", 100));
+    cakeBakingService.saveNewBottom(new CakeBottomInfo("rice", 100));
+
+    // In these Cake specs, calories are effectively ignored and hence
+    // specified as zeroes.
     CakeInfo cake1 =
         new CakeInfo(new CakeToppingInfo("candies", 0), Arrays.asList(new CakeLayerInfo(
-            "chocolate", 0), new CakeLayerInfo("banana", 0), new CakeLayerInfo("strawberry", 0)));
+            "chocolate", 0), new CakeLayerInfo("banana", 0), new CakeLayerInfo("strawberry", 0)),
+            new CakeBottomInfo("bread", 0));
     try {
       cakeBakingService.bakeNewCake(cake1);
     } catch (CakeBakingException e) {
@@ -86,7 +93,7 @@ public class App {
     CakeInfo cake2 =
         new CakeInfo(new CakeToppingInfo("cherry", 0), Arrays.asList(
             new CakeLayerInfo("vanilla", 0), new CakeLayerInfo("lemon", 0), new CakeLayerInfo(
-                "strawberry", 0)));
+                "strawberry", 0)), new CakeBottomInfo("rice", 0));
     try {
       cakeBakingService.bakeNewCake(cake2);
     } catch (CakeBakingException e) {

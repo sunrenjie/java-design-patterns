@@ -38,4 +38,8 @@ public interface CakeBakingService {
    * Get available cake layers
    */
   List<CakeLayerInfo> getAvailableLayers();
+
+  void saveNewBottom(CakeBottomInfo bottomInfo);
+
+  List<CakeBottomInfo> getAvailableBottoms();
 }
