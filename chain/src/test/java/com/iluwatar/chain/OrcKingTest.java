@@ -18,6 +18,7 @@ public class OrcKingTest {
       new Request(RequestType.DEFEND_CASTLE, "Don't let the barbarians enter my castle!!"),
       new Request(RequestType.TORTURE_PRISONER, "Don't just stand there, tickle him!"),
       new Request(RequestType.COLLECT_TAX, "Don't steal, the King hates competition ..."),
+      new Request(RequestType.COOK, "A new dish never eaten before!")
   };
 
   @Test
